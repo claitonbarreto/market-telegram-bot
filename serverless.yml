@@ -1,0 +1,53 @@
+
+service: telegram-bot
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  stage: ${opt:stage, 'develop'}
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+
+
+functions:
+  hello:
+    handler: src/handler.hello
+    events:
+      - http:
+          path: /hello
+          method: GET
+          cors: true
+
+  reciveMessage:
+    handler: src/handler.reciveMessage
+    environment:
+      AMAZON_URL: ${env:AMAZON_URL}
+      ML_URL: ${env:ML_URL}
+      AMERICANAS_URL: ${env:AMERICANAS_URL}
+      MAGAZINE_LUIZA_URL: ${env:MAGAZINE_LUIZA_URL}
+      TELEGRAM_BOT_TOKEN: ${env:TELEGRAM_BOT_TOKEN}
+      BROWSER: ${env:BROWSER}
+    events:
+    - http:
+        cors:
+          origin: '*'
+        path: '/'
+        method: any
+    - http:
+        cors:
+          origin: '*'
+        path: '{proxy+}'
+        method: any
+
+
+plugins:
+  - serverless-offline  
+  - serverless-dotenv-plugin
+  - serverless-plugin-typescript
+
+custom:
+  dotenv:
+    exclude:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
