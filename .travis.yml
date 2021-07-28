@@ -1,0 +1,35 @@
+language: node_js
+node_js:
+  - "12.x"
+
+deploy_service_job: &DEPLOY_SERVICE_JOB
+  cache:
+    directories:
+      - node_modules
+      - ${SERVICE_PATH}/node_modules
+
+  install:
+    - npm install -g serverless
+    - npm install -g yarn
+    - yarn install
+    - cd ${SERVICE_PATH}
+
+  script:
+    - cd ${SERVICE_PATH}
+    - serverless deploy
+    - cd -
+
+jobs:
+  include:
+    - <<: *DEPLOY_SERVICE_JOB
+      name: "Deploy Users API"
+      env:
+        - SERVICE_PATH="services/users-api"
+    - <<: *DEPLOY_SERVICE_JOB
+      name: "Deploy Posts API"
+      env:
+        - SERVICE_PATH="services/posts-api"
+    - <<: *DEPLOY_SERVICE_JOB
+      name: "Deploy Cron Job"
+      env:
+        - SERVICE_PATH="services/cron-job"
