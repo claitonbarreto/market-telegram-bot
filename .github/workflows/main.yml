@@ -13,11 +13,10 @@ jobs:
       matrix:
         node-version: [12.x]
     steps:
-    - uses: actions/checkout@v2
     - name: install dependencies
-    - uses: borales/actions-yarn@v2.3.0
+      uses: borales/actions-yarn@v2.3.0
       with:
-        args: build
+        args: install
     - name: serverless deploy
       uses: serverless/github-action@master
       with:
