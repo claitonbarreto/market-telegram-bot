@@ -12,10 +12,8 @@ deploy_service_job: &DEPLOY_SERVICE_JOB
     - npm install -g serverless
     - npm install -g yarn
     - yarn install
-    - cd ${SERVICE_PATH}
 
   script:
-    - cd ${SERVICE_PATH}
     - serverless deploy
     - cd -
 
